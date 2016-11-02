@@ -13,24 +13,26 @@ void dirstat(char * dir){
   int size;
   DIR * d;
   d = opendir(dir);
-  struct dirent curr;
-  curr = *readdir(d);
+  struct dirent* curr;
+  curr = readdir(d);
   char dirs[256] = "Directories:\n";
   char regs[256] = "Regular Files:\n";
-  while(&curr){
-    if (curr.d_type == DT_DIR){
-      strcat(dirs, curr.d_name);
+  while(curr){
+    if (curr->d_type == DT_DIR){
+      strcat(dirs, curr->d_name);
+      strcat(dirs, "\n");
     }
-    if (curr.d_type == DT_REG){
+    if (curr->d_type == DT_REG){
       struct stat st;
       char fildir[256];
       strcpy(fildir,dir);
-      strcat(fildir,curr.d_name);
+      strcat(fildir,curr->d_name);
       stat(fildir, &st);
       size += st.st_size;
-      strcat(regs, curr.d_name);
+      strcat(regs, curr->d_name);
+      strcat(regs, "\n");
     }
-    curr = *readdir(d);
+    curr = readdir(d);
   }
   printf("Statistics for directory: %s\n", dir);
   printf("Size of Regular Files: %d\n", size);
@@ -40,7 +42,7 @@ void dirstat(char * dir){
 
 
 int main(){
-  dirstat("./");
+  dirstat("../");
 
   return 0;
 }
